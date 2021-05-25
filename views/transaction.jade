@@ -175,12 +175,12 @@ block contents
         self.isContractCreation = (tx.input.indexOf('0x6060604052') === 0);
 
         //-  console.log(tx);
-        tx.transactionPrice = web3.fromWei(tx.gas * tx.gasPrice, 'ether').toString(10) + ' ETH';
+        tx.transactionPrice = web3.utils.fromWei(tx.gas * tx.gasPrice, 'ether').toString(10) + ' ETH';
 
-        if(tx.value > 0) tx.value_eth = ' (' +  web3.fromWei(tx.value, 'ether').toString(10) + ' ETH)';
+        if(tx.value > 0) tx.value_eth = ' (' +  web3.utils.fromWei(tx.value, 'ether').toString(10) + ' ETH)';
         tx.value = tx.value.toString(10);
 
-        if(tx.gasPrice > 0) tx.gasPrice_gwei = ' (' +  web3.fromWei(tx.gasPrice, 'Gwei').toString(10) + ' Gwei)';
+        if(tx.gasPrice > 0) tx.gasPrice_gwei = ' (' +  web3.utils.fromWei(tx.gasPrice, 'Gwei').toString(10) + ' Gwei)';
         tx.gasPrice = tx.gasPrice.toString(10);
         self.tx = tx;
 

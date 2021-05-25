@@ -108,7 +108,7 @@ block contents
       address = address || self.address;
 
       self.balance = await getBalance(address);
-      self.balance_eth = '(' + web3.fromWei(app.balance, 'ether').toString(10) + ' ETH)';
+      self.balance_eth = '(' + web3.utils.fromWei(app.balance, 'ether').toString(10) + ' ETH)';
 
       self.storage = await getStorageAt(address);
       self.code = await getCode(address);
@@ -117,7 +117,7 @@ block contents
 
       self.transactionCount = await getTransactionCount(address);
 
-      self.balance_usd = await getETHUSD(web3.fromWei(app.balance, 'ether'));
+      self.balance_usd = await getETHUSD(web3.utils.fromWei(app.balance, 'ether'));
     }
 
     
