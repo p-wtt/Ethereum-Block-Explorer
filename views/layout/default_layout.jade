@@ -19,6 +19,8 @@ html(lang="ko")
         web3 = new Web3(web3.currentProvider);
       } else {
         web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+        //- web3 = new Web3(new Web3.providers.HttpProvider("https://mainnet.infura.io/v3/eef8a2c2c04848f9904d594eb9c225da"));
+
       }
       
   body
@@ -67,7 +69,7 @@ html(lang="ko")
 
         if( search.length === 66 ) { //tx hash
           location.href = '/tx/' + search;
-        } else if( search.length === 42 && web3.isAddress(search) ) {
+        } else if( search.length === 42 && web3.utils.isAddress(search) ) {
           location.href = '/address/' + search;
         } else if( search <= blockNumber ) {
           location.href = '/block/' + search;

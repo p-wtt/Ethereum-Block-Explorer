@@ -86,15 +86,15 @@ block contents
             a.d-inline-block.text-truncate(v-bind:href="'/tx/' + tx.hash", style="max-width:200px") {{ tx.hash }}
           td 
             a(v-bind:href="'/block/' + tx.blockNumber.toString(10)") {{ tx.blockNumber.toString(10) }}
-          td {{ web3.fromWei(tx.value, 'ether').toString(10) + ' ETH' }}
+          td {{ web3.utils.fromWei(tx.value, 'ether').toString(10) + ' ETH' }}
           td
             a.d-inline-block.text-truncate(v-bind:href="'/address/' + tx.from", style="max-width:150px") {{ tx.from }}
           td 
             span(v-if="tx.to === '0x0'") {{ tx.to }}
             a.d-inline-block.text-truncate(v-if="tx.to !== '0x0'", v-bind:href="'/address/' + tx.to", style="max-width:150px") {{ tx.to }}
           td {{ tx.gas.toString(10) }}
-          td {{ web3.fromWei(tx.gasPrice, 'ether').toString(10) + ' ETH' }}
-          td {{ web3.fromWei((tx.gas * tx.gasPrice), 'ether').toString(10) + ' ETH' }}
+          td {{ web3.utils.fromWei(tx.gasPrice, 'ether').toString(10) + ' ETH' }}
+          td {{ web3.utils.fromWei((tx.gas * tx.gasPrice)+"", 'ether').toString(10) + ' ETH' }}
 
   script.
 
@@ -118,7 +118,7 @@ block contents
 
     function getNetwork() {
       return new Promise((res, rej) => {
-        web3.version.getNetwork((error, result) => {
+        web3.eth.net.getId((error, result) => {
           if(error) rej(error);
           else res(result);
         });
@@ -127,7 +127,7 @@ block contents
 
     function getNode() {
       return new Promise((res, rej) => {
-        web3.version.getNode((error, result) => {
+        web3.eth.getNodeInfo((error, result) => {
           if(error) rej(error);
           else res(result);
         });
@@ -136,7 +136,7 @@ block contents
 
     function getPeerCount() {
       return new Promise((res, rej) => {
-        web3.net.getPeerCount((error, result) => {
+        web3.eth.net.getPeerCount((error, result) => {
           if(error) rej(error);
           else res(result);
         });
@@ -172,10 +172,12 @@ block contents
 
     function getBlock(hashStringOrBlockNumber, returnTransactionObjects) {
       return new Promise((res, rej) => {
-        web3.eth.getBlock(hashStringOrBlockNumber, returnTransactionObjects, (error, result) => {
-          if(error) rej(error);
-          else res(result);
-        });
+        if(typeof hashStringOrBlockNumber == "number") {
+          web3.eth.getBlock(hashStringOrBlockNumber, returnTransactionObjects, (error, result) => {
+            if(error) rej(error);
+            else res(result);
+          });
+        }
       });
     }
 
@@ -218,7 +220,7 @@ block contents
       getHashrate().then(r =>  self.hashrate = r);
       getPeerCount().then(r =>  self.peerCount = r);
       //- getGasPrice().then(r =>  self.gasPrice = r.toString(10) + ' (' +  web3.fromWei(r, 'ether').toString(10) + ' ETH)');
-      getGasPrice().then(r =>  self.gasPrice = r.toString(10) + ' (' +  web3.fromWei(r, 'gwei').toString(10) + ' Gwei)');
+      getGasPrice().then(r =>  self.gasPrice = r.toString(10) + ' (' +  web3.utils.fromWei(r, 'gwei').toString(10) + ' Gwei)');
 
       var blockNumber = await getBlockNumber();
       self.blockNumber = blockNumber;
@@ -238,7 +240,7 @@ block contents
       });
       self.txs = transactions;
 
-      web3.eth.filter("latest", function(error, result){
+      web3.eth.getPastLogs("latest", function(error, result){
         if (!error) {
           //- console.log(result);
           getBlock(result, true).then(block => {

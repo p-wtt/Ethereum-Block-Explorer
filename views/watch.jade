@@ -41,7 +41,7 @@ block contents
         if( watchs ) {
           this.watchs = JSON.parse(watchs);
         }
-        this.watchs.forEach(watch => getBalance(watch.address).then(r => watch.balance = web3.fromWei(r, 'ether') + ' ETH'));
+        this.watchs.forEach(watch => getBalance(watch.address).then(r => watch.balance = web3.utils.fromWei(r, 'ether') + ' ETH'));
       },
       methods: {
         onDel: function(index) {
@@ -50,7 +50,7 @@ block contents
           window.localStorage.setItem("watchs", JSON.stringify(this.watchs));
         },
         onAdd: function() {
-          if( !web3.isAddress(this.address) ) {
+          if( !web3.utils.isAddress(this.address) ) {
             alert('올바른 주소를 입력하세요.')
             return false;
           }
@@ -115,10 +115,10 @@ block contents
       });
     }
 
-    web3.eth.filter("latest", function(error, result){
+    web3.eth.getPastLogs("latest", function(error, result){
       if (!error) {
         console.log('block created!', result);
-        app.watchs.forEach(w => getBalance(w.address).then(r => w.balance = web3.fromWei(r, 'ether') + ' ETH'));
+        app.watchs.forEach(w => getBalance(w.address).then(r => w.balance = web3.utils.fromWei(r, 'ether') + ' ETH'));
         //filter(result);
       }
     });
