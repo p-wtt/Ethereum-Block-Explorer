@@ -94,7 +94,7 @@ block contents
             a.d-inline-block.text-truncate(v-if="tx.to !== '0x0'", v-bind:href="'/address/' + tx.to", style="max-width:150px") {{ tx.to }}
           td {{ tx.gas.toString(10) }}
           td {{ web3.utils.fromWei(tx.gasPrice, 'ether').toString(10) + ' ETH' }}
-          td {{ web3.utils.fromWei((tx.gas * tx.gasPrice), 'ether').toString(10) + ' ETH' }}
+          td {{ web3.utils.fromWei((tx.gas * tx.gasPrice)+"", 'ether').toString(10) + ' ETH' }}
 
   script.
 
@@ -172,10 +172,12 @@ block contents
 
     function getBlock(hashStringOrBlockNumber, returnTransactionObjects) {
       return new Promise((res, rej) => {
-        web3.eth.getBlock(hashStringOrBlockNumber, returnTransactionObjects, (error, result) => {
-          if(error) rej(error);
-          else res(result);
-        });
+        if(typeof hashStringOrBlockNumber == "number") {
+          web3.eth.getBlock(hashStringOrBlockNumber, returnTransactionObjects, (error, result) => {
+            if(error) rej(error);
+            else res(result);
+          });
+        }
       });
     }
 

@@ -69,7 +69,7 @@ html(lang="ko")
 
         if( search.length === 66 ) { //tx hash
           location.href = '/tx/' + search;
-        } else if( search.length === 42 && web3.isAddress(search) ) {
+        } else if( search.length === 42 && web3.utils.isAddress(search) ) {
           location.href = '/address/' + search;
         } else if( search <= blockNumber ) {
           location.href = '/block/' + search;
